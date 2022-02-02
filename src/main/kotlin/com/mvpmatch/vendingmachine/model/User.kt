@@ -12,11 +12,6 @@ data class User(
     var deposit: BigDecimal,
     var role: Role,
     ) {
-    companion object {
-        fun fromUserDto(userDto: UserDto): User {
-            return User(userDto.id, userDto.username, userDto.password, userDto.deposit, Role.SELLER);
-        }
-    }
 }
 
 enum class Role {
@@ -35,12 +30,11 @@ data class UserCreationDto(
 data class UserDto(
     val id: UUID,
     val username: String,
-    val password: String,
     val deposit: BigDecimal,
 ) {
     companion object {
         fun fromUser(user: User): UserDto {
-            return UserDto(user.id, user.username, user.password, user.deposit);
+            return UserDto(user.id, user.username, user.deposit);
         }
     }
 }

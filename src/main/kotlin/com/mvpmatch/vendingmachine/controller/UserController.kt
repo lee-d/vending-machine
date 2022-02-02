@@ -17,7 +17,7 @@ import java.util.*
     value = ["/api/v1/users"],
     produces = [MediaType.APPLICATION_JSON_VALUE],
 )
-class UserController (
+class UserController(
     private val userRepository: UserRepository,
 ) {
 
@@ -37,9 +37,25 @@ class UserController (
     }
 
     @GetMapping("/{id}")
-    fun findById(@PathVariable id: UUID): UserDto {
+    fun findUserById(@PathVariable id: UUID): UserDto {
         val user = userRepository.findByIdOrNull(id)
         return user?.let { UserDto.fromUser(it) } ?: throw NoModelFoundException("No user found with id $id")
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    fun deleteUser(@PathVariable id: UUID) {
+        userRepository.deleteById(id)
+    }
+
+    @PutMapping("/{id}")
+    fun updateUser(@PathVariable id: UUID, @RequestBody username: String): UserDto {
+        val user = userRepository.findByIdOrNull(id)
+        val updatedUser =
+            user?.let { it.copy(username = username) } ?: throw NoModelFoundException("No user found with id $id")
+        return updatedUser
+            .apply {userRepository.save(this)}
+            .run { UserDto.fromUser(this) }
     }
 
 }
