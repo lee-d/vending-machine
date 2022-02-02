@@ -6,32 +6,32 @@ import java.util.*
 
 @Document(collection = "product")
 data class Product(
-    var id: UUID,
-    val amountAvailable: Int,
-    val cost: BigDecimal,
-    val productName: String,
-    var sellerId: UUID,
+    val id: UUID,
+    var amountAvailable: Int,
+    var cost: BigDecimal,
+    var productName: String,
+    val sellerId: UUID,
 )
 
 data class ProductCreationDto(
-    var amountAvailable: Int,
-    var cost: BigDecimal,
-    var productName: String,
-    var sellerId: UUID,
+    val amountAvailable: Int,
+    val cost: BigDecimal,
+    val productName: String,
+    val sellerId: UUID,
 )
 
 data class ProductDto(
-    var id: UUID,
-    var amountAvailable: Int,
-    var cost: BigDecimal,
-    var productName: String,
+    val id: UUID,
+    val amountAvailable: Int,
+    val cost: BigDecimal,
+    val productName: String,
 ) {
     companion object {
         fun fromProduct(product: Product): ProductDto {
             return ProductDto(
                 product.id,
                 product.amountAvailable,
-                product.cost,
+                product.cost,   
                 product.productName,
             )
         }
@@ -39,7 +39,7 @@ data class ProductDto(
 }
 
 data class ProductUpdateDto(
-    var amountAvailable: Int,
-    var cost: BigDecimal,
-    var productName: String,
+    val amountAvailable: Int,
+    val cost: BigDecimal,
+    val productName: String,
 )

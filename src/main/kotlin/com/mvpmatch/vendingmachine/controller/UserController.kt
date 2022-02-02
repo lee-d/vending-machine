@@ -42,6 +42,11 @@ class UserController(
         return user?.let { UserDto.fromUser(it) } ?: throw NoModelFoundException("No user found with id $id")
     }
 
+    @GetMapping()
+    fun findAll(): List<UserDto> {
+        return userRepository.findAll().map { UserDto.fromUser(it) }
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     fun deleteUser(@PathVariable id: UUID) {
@@ -51,11 +56,19 @@ class UserController(
     @PutMapping("/{id}")
     fun updateUser(@PathVariable id: UUID, @RequestBody username: String): UserDto {
         val user = userRepository.findByIdOrNull(id)
-        val updatedUser =
-            user?.let { it.copy(username = username) } ?: throw NoModelFoundException("No user found with id $id")
-        return updatedUser
-            .apply {userRepository.save(this)}
-            .run { UserDto.fromUser(this) }
+        return user?.let {
+                val updateUser = it.copy(username = username)
+                UserDto.fromUser(userRepository.save(updateUser))
+            } ?: throw NoModelFoundException("No user found with id $id")
+    }
+
+    @PutMapping("/{id}/deposit")
+    fun deposit(@PathVariable id: UUID, @RequestParam amount: Int): UserDto {
+        val user = userRepository.findByIdOrNull(id)
+        return user?.let {
+                it.deposit(amount)
+                UserDto.fromUser(userRepository.save(it))
+            } ?: throw NoModelFoundException("No user found with id $id")
     }
 
 }

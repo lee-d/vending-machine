@@ -1,17 +1,27 @@
 package com.mvpmatch.vendingmachine.model
 
+import com.mvpmatch.vendingmachine.exception.ALLOWED_DEPOSIT_VALUES
+import com.mvpmatch.vendingmachine.exception.InvalidDepositException
 import org.springframework.data.mongodb.core.mapping.Document
 import java.math.BigDecimal
+import java.math.MathContext
 import java.util.*
 
 @Document(collection = "user")
 data class User(
-    var id: UUID,
-    var username: String,
-    var password: String,
+    val id: UUID,
+    val username: String,
+    val password: String,
     var deposit: BigDecimal,
-    var role: Role,
+    val role: Role,
     ) {
+
+    fun deposit(amount: Int) {
+        if (!ALLOWED_DEPOSIT_VALUES.contains(amount)) {
+            throw InvalidDepositException("Only amount of $ALLOWED_DEPOSIT_VALUES allowed to deposit")
+        }
+       this.deposit = this.deposit.add(amount.toBigDecimal().divide(BigDecimal(100)))
+    }
 }
 
 enum class Role {
@@ -22,15 +32,15 @@ enum class Role {
 }
 
 data class UserCreationDto(
-    val username: String,
-    val password: String,
-    val role: Role,
+    var username: String,
+    var password: String,
+    var role: Role,
 )
 
 data class UserDto(
-    val id: UUID,
-    val username: String,
-    val deposit: BigDecimal,
+    var id: UUID,
+    var username: String,
+    var deposit: BigDecimal,
 ) {
     companion object {
         fun fromUser(user: User): UserDto {

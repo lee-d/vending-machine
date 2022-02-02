@@ -1,5 +1,6 @@
 package com.mvpmatch.vendingmachine.controller
 
+import com.mvpmatch.vendingmachine.exception.InvalidDepositException
 import com.mvpmatch.vendingmachine.exception.NoModelFoundException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -19,6 +20,16 @@ class ResponseExceptionHandler : ResponseEntityExceptionHandler() {
         return handleExceptionInternal(
             ex, ex.message,
             HttpHeaders(), HttpStatus.NOT_FOUND, request
+        )
+    }
+
+    @ExceptionHandler(value = [InvalidDepositException::class])
+    protected fun handleInvalidDeposit(
+        ex: Exception, request: WebRequest
+    ): ResponseEntity<Any?>? {
+        return handleExceptionInternal(
+            ex, ex.message,
+            HttpHeaders(), HttpStatus.BAD_REQUEST, request
         )
     }
 
