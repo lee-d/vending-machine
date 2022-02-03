@@ -1,11 +1,10 @@
 package com.mvpmatch.vendingmachine.controller
 
+import com.mvpmatch.vendingmachine.dto.PurchaseResponseDto
 import com.mvpmatch.vendingmachine.exception.NoModelFoundException
-import com.mvpmatch.vendingmachine.model.Product
-import com.mvpmatch.vendingmachine.model.ProductCreationDto
-import com.mvpmatch.vendingmachine.model.ProductDto
-import com.mvpmatch.vendingmachine.model.ProductUpdateDto
+import com.mvpmatch.vendingmachine.model.*
 import com.mvpmatch.vendingmachine.repository.ProductRepository
+import com.mvpmatch.vendingmachine.service.ProductPurchaseService
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -19,6 +18,7 @@ import java.util.*
 )
 class ProductController(
     private val productRepository: ProductRepository,
+    private val productPurchaseService: ProductPurchaseService,
 ) {
 
     @PostMapping
@@ -58,6 +58,11 @@ class ProductController(
         return updatedProduct
             .apply {productRepository.save(this)}
             .run { ProductDto.fromProduct(this) }
+    }
+
+    @PutMapping("/{id}/purchase")
+    fun deposit(@PathVariable id: UUID, @RequestBody dto: ProductPurchaseDto): PurchaseResponseDto {
+        return productPurchaseService.purchase(id, dto)
     }
 
 }

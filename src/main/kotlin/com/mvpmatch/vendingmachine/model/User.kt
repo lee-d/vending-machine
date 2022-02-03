@@ -1,6 +1,7 @@
 package com.mvpmatch.vendingmachine.model
 
 import com.mvpmatch.vendingmachine.exception.ALLOWED_DEPOSIT_VALUES
+import com.mvpmatch.vendingmachine.exception.InsufficientDepositException
 import com.mvpmatch.vendingmachine.exception.InvalidDepositException
 import org.springframework.data.mongodb.core.mapping.Document
 import java.math.BigDecimal
@@ -21,6 +22,17 @@ data class User(
             throw InvalidDepositException("Only amount of $ALLOWED_DEPOSIT_VALUES allowed to deposit")
         }
        this.deposit = this.deposit.add(amount.toBigDecimal().divide(BigDecimal(100)))
+    }
+
+    fun payWithDeposit(price: BigDecimal): BigDecimal {
+        if (hasInsufficientDeposit(price)) {
+            throw InsufficientDepositException("Oh oh, insufficient deposit. Please deposit more money")
+        }
+        return deposit.minus(price).apply { deposit = this }
+    }
+
+    private fun hasInsufficientDeposit(price: BigDecimal): Boolean {
+        return deposit.minus(price) < BigDecimal.ZERO
     }
 }
 

@@ -11,7 +11,19 @@ data class Product(
     var cost: BigDecimal,
     var productName: String,
     val sellerId: UUID,
-)
+) {
+    fun calculateTotalPrice(amount: Int): BigDecimal {
+        return cost.multiply(amount.toBigDecimal())
+    }
+
+    fun hasInsufficientAvailability(amount: Int): Boolean {
+        return amountAvailable < amount
+    }
+
+    fun reduceAvailability(amount: Int) {
+        this.amountAvailable -= amount
+    }
+}
 
 data class ProductCreationDto(
     val amountAvailable: Int,
@@ -31,7 +43,7 @@ data class ProductDto(
             return ProductDto(
                 product.id,
                 product.amountAvailable,
-                product.cost,   
+                product.cost,
                 product.productName,
             )
         }
@@ -42,4 +54,9 @@ data class ProductUpdateDto(
     val amountAvailable: Int,
     val cost: BigDecimal,
     val productName: String,
+)
+
+data class ProductPurchaseDto(
+    val userId: UUID,
+    val amount: Int
 )

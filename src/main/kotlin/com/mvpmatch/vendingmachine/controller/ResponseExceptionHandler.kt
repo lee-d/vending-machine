@@ -1,7 +1,9 @@
 package com.mvpmatch.vendingmachine.controller
 
+import com.mvpmatch.vendingmachine.exception.InsufficientDepositException
 import com.mvpmatch.vendingmachine.exception.InvalidDepositException
 import com.mvpmatch.vendingmachine.exception.NoModelFoundException
+import com.mvpmatch.vendingmachine.exception.OutOfStockException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -30,6 +32,16 @@ class ResponseExceptionHandler : ResponseEntityExceptionHandler() {
         return handleExceptionInternal(
             ex, ex.message,
             HttpHeaders(), HttpStatus.BAD_REQUEST, request
+        )
+    }
+
+    @ExceptionHandler(value = [OutOfStockException::class, InsufficientDepositException::class])
+    protected fun handleOutOfStock(
+        ex: Exception, request: WebRequest
+    ): ResponseEntity<Any?>? {
+        return handleExceptionInternal(
+            ex, ex.message,
+            HttpHeaders(), HttpStatus.CONFLICT, request
         )
     }
 
