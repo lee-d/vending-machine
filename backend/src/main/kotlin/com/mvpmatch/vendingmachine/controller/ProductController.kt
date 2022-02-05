@@ -8,6 +8,7 @@ import com.mvpmatch.vendingmachine.service.ProductPurchaseService
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -60,6 +61,7 @@ class ProductController(
             .run { ProductDto.fromProduct(this) }
     }
 
+    @PreAuthorize("hasAuthority('ROLE_BUYER')")
     @PutMapping("/{id}/purchase")
     fun deposit(@PathVariable id: UUID, @RequestBody dto: ProductPurchaseDto): PurchaseResponseDto {
         return productPurchaseService.purchase(id, dto)

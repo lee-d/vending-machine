@@ -8,12 +8,12 @@ import java.util.*
 data class Product(
     val id: UUID,
     var amountAvailable: Int,
-    var cost: BigDecimal,
+    var cost: Int,
     var productName: String,
     val sellerId: UUID,
 ) {
-    fun calculateTotalPrice(amount: Int): BigDecimal {
-        return cost.multiply(amount.toBigDecimal())
+    fun calculateTotalPrice(amount: Int): Int {
+        return cost.times(amount)
     }
 
     fun hasInsufficientAvailability(amount: Int): Boolean {
@@ -27,7 +27,7 @@ data class Product(
 
 data class ProductCreationDto(
     val amountAvailable: Int,
-    val cost: BigDecimal,
+    val cost: Int,
     val productName: String,
     val sellerId: UUID,
 )
@@ -35,7 +35,7 @@ data class ProductCreationDto(
 data class ProductDto(
     val id: UUID,
     val amountAvailable: Int,
-    val cost: BigDecimal,
+    val cost: Int,
     val productName: String,
 ) {
     companion object {
@@ -52,7 +52,7 @@ data class ProductDto(
 
 data class ProductUpdateDto(
     val amountAvailable: Int,
-    val cost: BigDecimal,
+    val cost: Int,
     val productName: String,
 )
 

@@ -25,14 +25,14 @@ class ProductPurchaseService(
         product.reduceAvailability(productPurchaseDto.amount)
 
         val user = userRepository.findByIdOrNull(productPurchaseDto.userId) ?: throw NoModelFoundException("No user found for id ${productPurchaseDto.userId}")
-        val remainingDeposit = user.payWithDeposit(totalPrice)
+        val change = user.payWithDeposit(totalPrice)
         productRepository.save(product)
         userRepository.save(user)
 
         return PurchaseResponseDto(
             totalPrice = totalPrice,
             productName = product.productName,
-            remainingDeposit = remainingDeposit,
+            change = change,
         )
     }
 

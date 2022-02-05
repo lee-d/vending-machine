@@ -33,7 +33,7 @@ class UserController(
                 UUID.randomUUID(),
                 dto.username,
                 bCryptPasswordEncoder.encode(dto.password),
-                BigDecimal.ZERO,
+                0,
                 dto.role,
             )
         )
@@ -66,8 +66,8 @@ class UserController(
             } ?: throw NoModelFoundException("No user found with id $id")
     }
 
-    @PutMapping("/{id}/deposit")
     @PreAuthorize("hasAuthority('ROLE_BUYER')")
+    @PutMapping("/{id}/deposit")
     fun deposit(@PathVariable id: UUID, @RequestParam amount: Int): UserDto {
         val user = userRepository.findByIdOrNull(id)
         return user?.let {
@@ -75,5 +75,13 @@ class UserController(
                 UserDto.fromUser(userRepository.save(it))
             } ?: throw NoModelFoundException("No user found with id $id")
     }
-    
+
+    @PreAuthorize("hasAuthority('ROLE_BUYER')")
+    @PutMapping("/{id}/reset")
+    @ResponseStatus(HttpStatus.OK)
+    fun resetDeposit(@PathVariable id: UUID) {
+        userRepository.findByIdOrNull(id)?.let {
+            it.resetDeposit()
+        }.also { userRepository.save(it as User) } ?: throw NoModelFoundException("No user found with id $id")
+    }
 }
