@@ -1,0 +1,20 @@
+server:
+  port: 8088
+
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      database: vending-machine
+      username: root
+      password: secret123
+      host: localhost
+#  autoconfigure:
+#    exclude[0]: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
+security:
+  jwt:
+    keystore-location: keystore-vending-machine.jks
+    keystore-password: superSecret2022
+    key-alias: jwt-signing-vending-machine
+    private-key-passphrase: superSecret2022

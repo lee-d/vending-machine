@@ -8,6 +8,9 @@ import com.mvpmatch.vendingmachine.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.security.access.annotation.Secured
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.*
 import java.math.BigDecimal
 import java.util.*
@@ -18,7 +21,8 @@ import java.util.*
     produces = [MediaType.APPLICATION_JSON_VALUE],
 )
 class UserController(
-    private val userRepository: UserRepository,
+    val userRepository: UserRepository,
+    val bCryptPasswordEncoder: BCryptPasswordEncoder
 ) {
 
     @PostMapping
@@ -28,7 +32,7 @@ class UserController(
             User(
                 UUID.randomUUID(),
                 dto.username,
-                dto.password,
+                bCryptPasswordEncoder.encode(dto.password),
                 BigDecimal.ZERO,
                 dto.role,
             )
@@ -63,6 +67,7 @@ class UserController(
     }
 
     @PutMapping("/{id}/deposit")
+    @PreAuthorize("hasAuthority('ROLE_BUYER')")
     fun deposit(@PathVariable id: UUID, @RequestParam amount: Int): UserDto {
         val user = userRepository.findByIdOrNull(id)
         return user?.let {
@@ -70,5 +75,5 @@ class UserController(
                 UserDto.fromUser(userRepository.save(it))
             } ?: throw NoModelFoundException("No user found with id $id")
     }
-
+    
 }
