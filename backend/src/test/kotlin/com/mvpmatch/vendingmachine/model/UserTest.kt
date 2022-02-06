@@ -16,7 +16,7 @@ class UserTest() {
         //when
         user.deposit(10)
         //then
-        Assertions.assertThat(user.deposit).isEqualByComparingTo(0.1.toBigDecimal())
+        Assertions.assertThat(user.deposit).isEqualTo(10)
     }
 
     @Test
@@ -46,7 +46,7 @@ class UserTest() {
             UUID.randomUUID(),
             "someName",
             "secret",
-            BigDecimal.ZERO,
+            0,
             Role.BUYER
         )
     }
