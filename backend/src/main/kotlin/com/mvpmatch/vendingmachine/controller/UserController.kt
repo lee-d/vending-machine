@@ -40,23 +40,27 @@ class UserController(
         return createdUser.id
     }
 
+    @PreAuthorize("hasAuthority('ROLE_SELLER')")
     @GetMapping("/{id}")
     fun findUserById(@PathVariable id: UUID): UserDto {
         val user = userRepository.findByIdOrNull(id)
         return user?.let { UserDto.fromUser(it) } ?: throw NoModelFoundException("No user found with id $id")
     }
 
+    @PreAuthorize("hasAuthority('ROLE_SELLER')")
     @GetMapping()
     fun findAll(): List<UserDto> {
         return userRepository.findAll().map { UserDto.fromUser(it) }
     }
 
+    @PreAuthorize("hasAuthority('ROLE_SELLER')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     fun deleteUser(@PathVariable id: UUID) {
         userRepository.deleteById(id)
     }
 
+    @PreAuthorize("hasAuthority('ROLE_SELLER')")
     @PutMapping("/{id}")
     fun updateUser(@PathVariable id: UUID, @RequestBody username: String): UserDto {
         val user = userRepository.findByIdOrNull(id)

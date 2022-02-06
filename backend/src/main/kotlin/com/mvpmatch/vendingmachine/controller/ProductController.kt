@@ -22,6 +22,7 @@ class ProductController(
     private val productPurchaseService: ProductPurchaseService,
 ) {
 
+    @PreAuthorize("hasAuthority('ROLE_SELLER')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun createProduct(@RequestBody dto: ProductCreationDto): UUID {
@@ -43,12 +44,14 @@ class ProductController(
             ?: throw NoModelFoundException("No product found with id $id")
     }
 
+    @PreAuthorize("hasAuthority('ROLE_SELLER')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     fun deleteProduct(@PathVariable id: UUID) {
         productRepository.deleteById(id)
     }
 
+    @PreAuthorize("hasAuthority('ROLE_SELLER')")
     @PutMapping("/{id}")
     fun updateProduct(@PathVariable id: UUID, @RequestBody dto: ProductUpdateDto): ProductDto {
         val updatedProduct =
