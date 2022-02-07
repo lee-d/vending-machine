@@ -66,7 +66,7 @@ class ProductPurchaseServiceTest {
         argumentCaptor<User>().apply {
             verify(userRepository).save(capture())
 
-            assertThat(firstValue).isEqualTo(user.copy(deposit = 1150))
+            assertThat(firstValue).isEqualTo(user.copy(deposit = 0))
         }
         verify(productRepository).findById(product.id);
         verify(userRepository).findById(user.id);
@@ -94,12 +94,12 @@ class ProductPurchaseServiceTest {
         argumentCaptor<User>().apply {
             verify(userRepository).save(capture())
 
-            assertThat(firstValue).isEqualTo(user.copy(deposit = 850))
+            assertThat(firstValue).isEqualTo(user.copy(deposit = 0))
         }
         verify(productRepository).findById(product.id);
         verify(userRepository).findById(user.id);
         assertThat(result).isEqualTo(PurchaseResponseDto(450, "someProduct",
-            List(8) {100} + listOf(20) + listOf(10) + listOf(5))
+            List(8) {100} + listOf(50) + listOf(20) + listOf(10) + listOf(5))
         )
     }
 

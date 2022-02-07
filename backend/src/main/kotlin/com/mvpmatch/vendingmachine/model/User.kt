@@ -67,15 +67,19 @@ enum class Role {
 }
 
 data class UserCreationDto(
-    var username: String,
-    var password: String,
-    var role: Role,
+    val username: String,
+    val password: String,
+    val role: Role,
+)
+
+data class UserCreationResponse(
+    val id: UUID
 )
 
 data class UserDto(
-    var id: UUID,
-    var username: String,
-    var deposit: Int,
+    val id: UUID,
+    val username: String,
+    val deposit: Int,
 ) {
     companion object {
         fun fromUser(user: User): UserDto {

@@ -3,6 +3,7 @@ package com.mvpmatch.vendingmachine.controller
 import com.mvpmatch.vendingmachine.exception.NoModelFoundException
 import com.mvpmatch.vendingmachine.model.User
 import com.mvpmatch.vendingmachine.model.UserCreationDto
+import com.mvpmatch.vendingmachine.model.UserCreationResponse
 import com.mvpmatch.vendingmachine.model.UserDto
 import com.mvpmatch.vendingmachine.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -27,7 +28,7 @@ class UserController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createUser(@RequestBody dto: UserCreationDto): UUID {
+    fun createUser(@RequestBody dto: UserCreationDto): UserCreationResponse {
         val createdUser = userRepository.save(
             User(
                 UUID.randomUUID(),
@@ -37,7 +38,7 @@ class UserController(
                 dto.role,
             )
         )
-        return createdUser.id
+        return UserCreationResponse(createdUser.id)
     }
 
     @GetMapping("/{id}")
