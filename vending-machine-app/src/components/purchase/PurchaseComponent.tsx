@@ -8,7 +8,7 @@ import {
   resetDeposit
 } from '../../service/ApiService';
 import styled from 'styled-components';
-import { blue1, blue2, blue3, green, orange, blue } from '../colors';
+import { blue1, blue3, blue4 } from '../colors';
 import { DepositComponent } from './DepositComponent';
 import authStateStore from '../../authentication/AuthenticationStateStore';
 import { ProductPurchaseComponent } from './ProductPurchaseComponent';
@@ -43,6 +43,7 @@ const ItemContainer = styled.div`
   border-style: solid;
   border-width: 1px;
   padding: 20px;
+  background: ${blue4}
 `;
 
 const RightContainer = styled.div`
@@ -88,18 +89,16 @@ export const PurchaseComponent: React.FC = props => {
        })}
      </ItemContainer>
      <ItemContainer>
-       <RightContainer>
          <DepositComponent deposit={deposit} onDeposit={onDeposit} onReset={onReset}/>
-       </RightContainer>
-       {selectedProduct && <RightContainer>
+          <p></p>
+       {selectedProduct &&
          <ProductPurchaseComponent
            product={selectedProduct}
            onPurchase={onPurchase}
            onSetPurchaseAmount={setPurchaseAmount}
            amount={purchaseAmount}
            deposit={deposit}
-         />
-       </RightContainer>}
+         />}
      </ItemContainer>
    </Container>
   );

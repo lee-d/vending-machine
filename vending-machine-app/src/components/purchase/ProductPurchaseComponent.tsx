@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Product } from '../../service/ApiService';
-import { blue1, blue } from '../colors';
+import { blue1, blue, yellow } from '../colors';
 
 interface ProductPurchaseComponent {
   onPurchase: VoidFunction;
@@ -26,6 +26,11 @@ const PurchaseButton = styled.button`
   }
 `;
 
+const Container = styled.div`
+  padding: 10px;
+  background: ${yellow}
+`;
+
 const ProductLabel = styled.span`
   font-weight: bold;
   color: ${blue1};
@@ -34,13 +39,13 @@ const ProductLabel = styled.span`
 export const ProductPurchaseComponent: React.FC<ProductPurchaseComponent> = props => {
 
   return (
-    <>
+    <Container>
       <p><ProductLabel>{props.product.productName}</ProductLabel></p>
       <p><ProductLabel>Price: </ProductLabel>{props.product.cost / 100} Euro</p>
       <p>Amount: <input type="number" min="1" max={props.product.amountAvailable} value={props.amount} onChange={e => props.onSetPurchaseAmount(+e.target.value)}/> </p>
       <p>Total price: {props.amount * props.product.cost / 100} Euro</p>
       <PurchaseButton disabled={props.amount * props.product.cost > props.deposit} onClick={() => props.onPurchase()}>Purchase</PurchaseButton>
-    </>
+    </Container>
   );
 
 }

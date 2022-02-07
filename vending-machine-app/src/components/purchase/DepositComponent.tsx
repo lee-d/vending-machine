@@ -1,5 +1,5 @@
 import React from 'react';
-import { blue2, green, orange } from '../colors';
+import { blue2, green, orange, yellow } from '../colors';
 import styled from 'styled-components';
 
 
@@ -12,6 +12,11 @@ interface DepositComponentProps {
 interface DepositValueProp {
   color?: string;
 }
+
+const Container = styled.div`
+  padding: 10px;
+  background: ${yellow}
+`;
 
 const DepositContainer = styled.div`
   display: flex;
@@ -45,7 +50,7 @@ const DepositHeader = styled.span`
 export const DepositComponent: React.FC<DepositComponentProps> = props => {
 
   return (
-    <>
+    <Container>
       <DepositHeader>Deposit: {props.deposit / 100} Euro</DepositHeader>
       <DepositContainer>
         <DepositButton onClick={() => props.onDeposit(5)}>5 Cents</DepositButton>
@@ -55,7 +60,7 @@ export const DepositComponent: React.FC<DepositComponentProps> = props => {
         <DepositButton onClick={() => props.onDeposit(100)}>100 Cents</DepositButton>
         <DepositButton onClick={() => props.onReset()} color={orange}>Reset</DepositButton>
       </DepositContainer>
-    </>
+    </Container>
   );
 
 }
