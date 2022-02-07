@@ -1,0 +1,10 @@
+export const blue = '#328CC1';
+export const errorTextColor = '#E0002B';
+export const gray1 = '#F4F5F5';
+export const gray2 = '#AFAFAF';
+export const gray3 = '#E2E8F0';
+export const blue1 = '#263B48';
+export const blue2 = '#004875';
+export const blue3 = '#6D9DBA';
+export const green = '#bdd9bf';
+export const orange = '#F8AE49';

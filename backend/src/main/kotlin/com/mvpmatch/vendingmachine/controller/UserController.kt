@@ -40,7 +40,6 @@ class UserController(
         return createdUser.id
     }
 
-    @PreAuthorize("hasAuthority('ROLE_SELLER')")
     @GetMapping("/{id}")
     fun findUserById(@PathVariable id: UUID): UserDto {
         val user = userRepository.findByIdOrNull(id)
@@ -81,7 +80,7 @@ class UserController(
     }
 
     @PreAuthorize("hasAuthority('ROLE_BUYER')")
-    @PutMapping("/{id}/reset")
+    @PutMapping("/{id}/resetdeposit")
     @ResponseStatus(HttpStatus.OK)
     fun resetDeposit(@PathVariable id: UUID) {
         userRepository.findByIdOrNull(id)?.let {

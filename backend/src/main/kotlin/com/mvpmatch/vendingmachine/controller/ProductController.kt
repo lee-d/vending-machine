@@ -44,6 +44,11 @@ class ProductController(
             ?: throw NoModelFoundException("No product found with id $id")
     }
 
+    @GetMapping()
+    fun findAllProducts(): List<ProductDto> {
+        return productRepository.findAll().map { ProductDto.fromProduct(it) }
+    }
+
     @PreAuthorize("hasAuthority('ROLE_SELLER')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)

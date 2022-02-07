@@ -42,6 +42,7 @@ data class User(
             deposit -= changeForCoin.sum()
             change.addAll(changeForCoin)
         }
+        resetDeposit()
         return change.toList()
     }
 
