@@ -1,9 +1,6 @@
 import React, { useState, } from 'react';
 import styled from 'styled-components';
-import { errorTextColor, gray1, gray3, blue } from '../colors';
-import { Spacing } from '../Spacing';
-import { ColFlexBox } from '../FlexBox';
-import { LoginPageWrapper } from './LoginPageWrapper';
+import { errorTextColor, gray1, gray3, blue, gray2 } from '../colors';
 import authStateStore from '../../authentication/AuthenticationStateStore';
 import { useHistory } from 'react-router-dom';
 
@@ -13,11 +10,13 @@ const InputContainerHeading = styled.h2`
   margin-top: 0;
   margin-bottom: 20px;
 `;
+
 const LoginForm = styled.form`
   display: flex;
   display-direction: column;
   height: 100%;
 `;
+
 const LoginInputField = styled.input`
   width: 100%;
   padding: 0.5rem 0.5rem;
@@ -26,34 +25,8 @@ const LoginInputField = styled.input`
   border-radius: 0.25rem;
   margin-bottom: 10px;
   filter: none;
-}
-  &:hover, &:focus, &:placeholder-shown {
-    background-color: #fff !important;
-  }
-  &:-webkit-autofill {
-    -webkit-transition: background-color 9999s ease-out !important;
-    -webkit-transition-delay: 9999s !important;
-    -webkit-box-shadow: 0 0 0 1000px ${gray1} inset !important;
-    -moz-box-shadow: 0 0 0 100px ${gray1} inset !important;
-    box-shadow: 0 0 0 100px ${gray1} inset !important;
-    font-family: Source Sans Pro important!;
-    font-size: 14px !important;
-    font-weight: 500 !important;
-  }
-  &:-webkit-autofill:hover,
-  &:-webkit-autofill:active,
-  &:-webkit-autofill:focus {
-    -webkit-transition: background-color 9999s ease-out !important;
-    -webkit-transition-delay: 9999s !important;
-    background-color: green !important;
-    -webkit-box-shadow: 0 0 0 100px #fff inset !important;
-    -moz-box-shadow: 0 0 0 100px #fff inset !important;
-    box-shadow: 0 0 0 100px #fff inset !important;
-    font-family: Source Sans Pro important!;
-    font-size: 14px !important;
-    font-weight: 500 !important;
-  }
 `;
+
 const LoginButton = styled.button`
   font-size: 16px;
   font-weight: 500;
@@ -67,6 +40,43 @@ const LoginButton = styled.button`
     background-color: #e2e8f0;
     cursor: not-allowed;
   }
+`;
+
+const Container = styled.main`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vx;
+  height: 100vh;
+  min-height: 700px;
+  background-color: ${gray1};
+  overflow-y: auto;
+  min-width: 300px;
+`;
+
+const InputContainer = styled.div`
+  background-color: white;
+  border: 1px solid ${gray2};
+  border-radius: 0.25rem;
+  width: 400px;
+  padding: 30px;
+  margin: 50px 0;
+`;
+
+type FlexBoxProps = {
+  justifyContent?: string;
+  alignItems?: string;
+};
+
+export const StyledColFlexBox = styled.div<FlexBoxProps>`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: ${props => props.justifyContent};
+  margin: 10px;
+  height: 100%;
+  align-items: ${props => props.alignItems};
 `;
 
 type ErrorTextProps = {
@@ -95,48 +105,57 @@ export const Login: React.FC = props => {
   const [showError, setShowError] = useState<boolean>(false);
   const history = useHistory();
 
+  function login() {
+    authStateStore.login(username, password).then(res => {
+      if (res) {
+        history.push('/purchase')
+      } else {
+        setShowError(true)
+      }
+    })
+  }
+
   return (
-    <LoginPageWrapper>
-      <InputContainerHeading>Login</InputContainerHeading>
-      <LoginForm>
-        <ColFlexBox>
-          <LoginLabel htmlFor="username">Username</LoginLabel>
-          <LoginInputField
-            type="username"
-            value={username}
-            onChange={event => {
-              setShowError(false);
-              setUsername(event.target.value);
-            }}
-            onFocus={() => setShowError(false)}
-            aria-label="username-input"
-          />
-          <LoginLabel htmlFor="password">Passwort</LoginLabel>
-          <LoginInputField
-            type="password"
-            value={password}
-            onChange={event => {
-              setShowError(false);
-              setPassword(event.target.value);
-            }}
-            onFocus={() => setShowError(false)}
-            aria-label="password-input"
-          />
-          <ErrorText showError={showError}>Username or passwort incorrect</ErrorText>
-          <Spacing height="10px" />
-          <LoginButton
-            type="button"
-            onClick={() => {
-              authStateStore.login(username, password).then(res => {
-                history.push('/purchase')
-              })
-            }}
-            aria-label="login-button"
-          >
-            Login
-          </LoginButton>
-        </ColFlexBox>
-      </LoginForm>
-    </LoginPageWrapper>
+      <Container>
+        <StyledColFlexBox justifyContent="center" alignItems="center" >
+          <InputContainer>
+            <InputContainerHeading>Login</InputContainerHeading>
+            <LoginForm>
+              <StyledColFlexBox>
+                <LoginLabel htmlFor="username">Username</LoginLabel>
+                <LoginInputField
+                  type="username"
+                  value={username}
+                  onChange={event => {
+                    setShowError(false);
+                    setUsername(event.target.value);
+                  }}
+                  onFocus={() => setShowError(false)}
+                  aria-label="username-input"
+                />
+                <LoginLabel htmlFor="password">Password</LoginLabel>
+                <LoginInputField
+                  type="password"
+                  value={password}
+                  onChange={event => {
+                    setShowError(false);
+                    setPassword(event.target.value);
+                  }}
+                  onFocus={() => setShowError(false)}
+                  aria-label="password-input"
+                />
+                <ErrorText showError={showError}>Username or password incorrect</ErrorText>
+                <LoginButton
+                  type="button"
+                  onClick={login}
+                  aria-label="login-button"
+                >
+                  Login
+                </LoginButton>
+              </StyledColFlexBox>
+            </LoginForm>
+          </InputContainer>
+        </StyledColFlexBox>
+      </Container>
   );
 };

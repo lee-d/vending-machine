@@ -21,7 +21,7 @@ const DepositContainer = styled.div`
 `;
 
 
-const DepositValue = styled.div<DepositValueProp>`
+const DepositButton = styled.div<DepositValueProp>`
   width: 55px;
   height: 55px;
   border-style: solid;
@@ -33,6 +33,7 @@ const DepositValue = styled.div<DepositValueProp>`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 `;
 
 const DepositHeader = styled.span`
@@ -47,12 +48,12 @@ export const DepositComponent: React.FC<DepositComponentProps> = props => {
     <>
       <DepositHeader>Deposit: {props.deposit / 100} Euro</DepositHeader>
       <DepositContainer>
-        <DepositValue onClick={() => props.onDeposit(5)}>5 Cents</DepositValue>
-        <DepositValue onClick={() => props.onDeposit(10)}>10 Cents</DepositValue>
-        <DepositValue onClick={() => props.onDeposit(20)}>20 Cents</DepositValue>
-        <DepositValue onClick={() => props.onDeposit(50)}>50 Cents</DepositValue>
-        <DepositValue onClick={() => props.onDeposit(100)}>100 Cents</DepositValue>
-        <DepositValue onClick={() => props.onReset()} color={orange}>Reset</DepositValue>
+        <DepositButton onClick={() => props.onDeposit(5)}>5 Cents</DepositButton>
+        <DepositButton onClick={() => props.onDeposit(10)}>10 Cents</DepositButton>
+        <DepositButton onClick={() => props.onDeposit(20)}>20 Cents</DepositButton>
+        <DepositButton onClick={() => props.onDeposit(50)}>50 Cents</DepositButton>
+        <DepositButton onClick={() => props.onDeposit(100)}>100 Cents</DepositButton>
+        <DepositButton onClick={() => props.onReset()} color={orange}>Reset</DepositButton>
       </DepositContainer>
     </>
   );

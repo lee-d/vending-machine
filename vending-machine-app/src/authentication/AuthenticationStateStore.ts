@@ -24,9 +24,10 @@ class AuthStateStore {
         this.authUser = res.data
         return Promise.resolve(true);
       }).catch( err => {
-        return Promise.resolve(false);
+        return Promise.resolve(false)
     })
   }
+
 }
 
 const authStateStore = new AuthStateStore()
