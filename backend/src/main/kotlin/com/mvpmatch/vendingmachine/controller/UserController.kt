@@ -9,12 +9,12 @@ import com.mvpmatch.vendingmachine.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.security.access.annotation.Secured
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.*
-import java.math.BigDecimal
+import java.security.Principal
 import java.util.*
+
 
 @RestController
 @RequestMapping(
@@ -61,31 +61,31 @@ class UserController(
     }
 
     @PreAuthorize("hasAuthority('ROLE_SELLER')")
-    @PutMapping("/{id}")
-    fun updateUser(@PathVariable id: UUID, @RequestBody username: String): UserDto {
-        val user = userRepository.findByIdOrNull(id)
+    @PutMapping()
+    fun updateUser(@RequestBody username: String, principal: Principal): UserDto {
+        val user = userRepository.findByUsername(principal.name)
         return user?.let {
                 val updateUser = it.copy(username = username)
                 UserDto.fromUser(userRepository.save(updateUser))
-            } ?: throw NoModelFoundException("No user found with id $id")
+            } ?: throw NoModelFoundException("No user found with id ${principal.name}")
     }
 
     @PreAuthorize("hasAuthority('ROLE_BUYER')")
-    @PutMapping("/{id}/deposit")
-    fun deposit(@PathVariable id: UUID, @RequestParam amount: Int): UserDto {
-        val user = userRepository.findByIdOrNull(id)
+    @PutMapping("/deposit")
+    fun deposit(@RequestParam amount: Int, principal: Principal): UserDto {
+        val user = userRepository.findByUsername(principal.name)
         return user?.let {
                 it.deposit(amount)
                 UserDto.fromUser(userRepository.save(it))
-            } ?: throw NoModelFoundException("No user found with id $id")
+            } ?: throw NoModelFoundException("No user found with id ${principal.name}")
     }
 
     @PreAuthorize("hasAuthority('ROLE_BUYER')")
-    @PutMapping("/{id}/resetdeposit")
+    @PutMapping("/resetdeposit")
     @ResponseStatus(HttpStatus.OK)
-    fun resetDeposit(@PathVariable id: UUID) {
-        userRepository.findByIdOrNull(id)?.let {
+    fun resetDeposit(principal: Principal) {
+        userRepository.findByUsername(principal.name)?.let {
             it.resetDeposit()
-        }.also { userRepository.save(it as User) } ?: throw NoModelFoundException("No user found with id $id")
+        }.also { userRepository.save(it as User) } ?: throw NoModelFoundException("No user found with id ${principal.name}")
     }
 }

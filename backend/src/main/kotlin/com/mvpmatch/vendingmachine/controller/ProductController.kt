@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
+import java.security.Principal
 import java.util.*
 
 @RestController
@@ -71,8 +72,8 @@ class ProductController(
 
     @PreAuthorize("hasAuthority('ROLE_BUYER')")
     @PutMapping("/{id}/purchase")
-    fun deposit(@PathVariable id: UUID, @RequestBody dto: ProductPurchaseDto): PurchaseResponseDto {
-        return productPurchaseService.purchase(id, dto)
+    fun purchase(@PathVariable id: UUID, @RequestParam amount: Int, principal: Principal): PurchaseResponseDto {
+        return productPurchaseService.purchase(id, amount, principal.name)
     }
 
 }

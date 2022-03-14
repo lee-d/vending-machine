@@ -13,9 +13,7 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.*
-import java.math.BigDecimal
 import java.util.*
-import kotlin.contracts.contract
 
 class ProductPurchaseServiceTest {
 
@@ -40,7 +38,7 @@ class ProductPurchaseServiceTest {
         whenever(productRepository.findById(any())).thenReturn(Optional.of(product))
 
         //when //then
-        assertThatThrownBy { testee.purchase(product.id, ProductPurchaseDto(UUID.randomUUID(), 2)) }
+        assertThatThrownBy { testee.purchase(product.id, ProductPurchaseDto(UUID.randomUUID(), 2), principal) }
             .isInstanceOf(OutOfStockException::class.java)
             .hasMessage("So sorry, product ${product.productName} is out of stock.")
     }
@@ -55,7 +53,7 @@ class ProductPurchaseServiceTest {
         whenever(userRepository.findById(any())).thenReturn(Optional.of(user))
 
         //when
-        val result = testee.purchase(product.id, ProductPurchaseDto(userId, 1))
+        val result = testee.purchase(product.id, ProductPurchaseDto(userId, 1), principal)
 
         //then
         argumentCaptor<Product>().apply {
@@ -83,7 +81,7 @@ class ProductPurchaseServiceTest {
         whenever(userRepository.findById(any())).thenReturn(Optional.of(user))
 
         //when
-        val result = testee.purchase(product.id, ProductPurchaseDto(userId, 3))
+        val result = testee.purchase(product.id, ProductPurchaseDto(userId, 3), principal)
 
         //then
         argumentCaptor<Product>().apply {

@@ -77,13 +77,12 @@ data class UserCreationResponse(
 )
 
 data class UserDto(
-    val id: UUID,
     val username: String,
     val deposit: Int,
 ) {
     companion object {
         fun fromUser(user: User): UserDto {
-            return UserDto(user.id, user.username, user.deposit);
+            return UserDto(user.username, user.deposit);
         }
     }
 }

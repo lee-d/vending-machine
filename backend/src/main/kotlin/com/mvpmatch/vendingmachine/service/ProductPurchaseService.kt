@@ -3,7 +3,6 @@ package com.mvpmatch.vendingmachine.service
 import com.mvpmatch.vendingmachine.dto.PurchaseResponseDto
 import com.mvpmatch.vendingmachine.exception.NoModelFoundException
 import com.mvpmatch.vendingmachine.exception.OutOfStockException
-import com.mvpmatch.vendingmachine.model.ProductPurchaseDto
 import com.mvpmatch.vendingmachine.repository.ProductRepository
 import com.mvpmatch.vendingmachine.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -16,15 +15,15 @@ class ProductPurchaseService(
     val productRepository: ProductRepository
 ) {
 
-    fun purchase(productId: UUID, productPurchaseDto: ProductPurchaseDto): PurchaseResponseDto {
+    fun purchase(productId: UUID, purchaseAmount: Int, username: String): PurchaseResponseDto {
         val product = productRepository.findByIdOrNull(productId) ?: throw NoModelFoundException("No product found for id $productId")
-        if (product.hasInsufficientAvailability(productPurchaseDto.amount)) {
+        if (product.hasInsufficientAvailability(purchaseAmount)) {
             throw OutOfStockException("So sorry, product ${product.productName} is out of stock.")
         }
-        val totalPrice = product.calculateTotalPrice(productPurchaseDto.amount)
-        product.reduceAvailability(productPurchaseDto.amount)
+        val totalPrice = product.calculateTotalPrice(purchaseAmount)
+        product.reduceAvailability(purchaseAmount)
 
-        val user = userRepository.findByIdOrNull(productPurchaseDto.userId) ?: throw NoModelFoundException("No user found for id ${productPurchaseDto.userId}")
+        val user = userRepository.findByUsername(username) ?: throw NoModelFoundException("No user found for id ")
         val change = user.payWithDeposit(totalPrice)
         productRepository.save(product)
         userRepository.save(user)
