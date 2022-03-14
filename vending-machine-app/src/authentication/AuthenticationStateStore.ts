@@ -2,7 +2,6 @@ import { action, makeObservable, observable } from 'mobx';
 import axios from 'axios';
 
 export type AuthenticatedUser = {
-  userId: string,
   username: string,
   token: string,
   roles: string

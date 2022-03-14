@@ -35,7 +35,7 @@ class AuthController(
                 username,
                 mapOf("roles" to roles)
             )
-            return AuthenticatedUserDto(userId, username, jwt, roles)
+            return AuthenticatedUserDto(username, jwt, roles)
         }
         throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated")
     }

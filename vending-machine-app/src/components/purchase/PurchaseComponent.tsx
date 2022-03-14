@@ -112,11 +112,11 @@ export const PurchaseComponent: React.FC = props => {
     history.push("/login")
   }
   function onDeposit(value: number) {
-    depositCoins(authStateStore.authUser?.userId!!, value, redirectToLogin).then(depositValue => setDeposit(depositValue))
+    depositCoins(value, redirectToLogin).then(depositValue => setDeposit(depositValue))
   }
 
   function onReset() {
-    resetDeposit(authStateStore.authUser?.userId!!, redirectToLogin).then(res => setDeposit(0))
+    resetDeposit(redirectToLogin).then(res => setDeposit(0))
   }
 
   function onPurchaseSuccess(res: PurchaseResponse) {
